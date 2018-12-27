@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jmj.app.journeymakerjobs">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.jmj.app.journeymakerjobs.Splash"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.jmj.app.journeymakerjobs.MainActivity" />
+        <activity android:name="com.jmj.app.journeymakerjobs.JobSeekerReg" />
+        <activity android:name="com.jmj.app.journeymakerjobs.JobSeekerHome" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RecentJobs" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RecentJobDetails" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RecentJobRemarks" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RecentJobsApply" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RecentJobsNotify" />
+        <activity android:name="com.jmj.app.journeymakerjobs.ProfileOptions" />
+        <activity android:name="com.jmj.app.journeymakerjobs.CV" />
+        <activity android:name="com.jmj.app.journeymakerjobs.CVModification" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditEducation" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditExperience" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditTraining" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditExtracurricular" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditAchievement" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EditReference" />
+        <activity android:name="com.jmj.app.journeymakerjobs.JobCategory" />
+        <activity android:name="com.jmj.app.journeymakerjobs.MyChoiceList" />
+        <activity android:name="com.jmj.app.journeymakerjobs.ChangePassword" />
+        <activity android:name="com.jmj.app.journeymakerjobs.ForgetPassword" />
+        <activity android:name="com.jmj.app.journeymakerjobs.PicSignChange" />
+        <activity android:name="com.jmj.app.journeymakerjobs.SavedJobs" />
+        <activity android:name="com.jmj.app.journeymakerjobs.SavedJobDetails" />
+        <activity android:name="com.jmj.app.journeymakerjobs.Webpage" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerReg" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerHome" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerProfile" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerEdit" />
+        <activity android:name="com.jmj.app.journeymakerjobs.ChangePasswordEmp" />
+        <activity android:name="com.jmj.app.journeymakerjobs.PicChange" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerJobPost" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerAllJobs" />
+        <activity android:name="com.jmj.app.journeymakerjobs.AllJobPicChange" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerRunningJobs" />
+        <activity android:name="com.jmj.app.journeymakerjobs.RunningJobPicChange" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployeeJobDetails" />
+        <activity android:name="com.jmj.app.journeymakerjobs.ApplicantList" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerJobEdit" />
+        <activity android:name="com.jmj.app.journeymakerjobs.SavedJobRemarks" />
+        <activity android:name="com.jmj.app.journeymakerjobs.AdminHome" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployerSearch" />
+        <activity android:name="com.jmj.app.journeymakerjobs.EmployeeList" />
+        <activity android:name="com.jmj.app.journeymakerjobs.TermsandConditions" />
+    </application>
+
+</manifest>
