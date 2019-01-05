@@ -509,6 +509,7 @@
                 android:background="@drawable/opt_back"
                 android:gravity="center|start"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="10dp">
 
                 <TextView

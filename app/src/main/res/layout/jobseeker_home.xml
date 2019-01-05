@@ -284,7 +284,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="0dp"
                                 android:gravity="center"
-                                android:text="View Profile"
+                                android:text="My Profile"
                                 android:textColor="@color/button_login1"
                                 android:textSize="10dp" />
 
@@ -306,7 +306,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="0dp"
                                 android:gravity="center"
-                                android:text="Settings"
+                                android:text="Logout"
                                 android:textColor="@color/button_login1"
                                 android:textSize="10dp" />
 

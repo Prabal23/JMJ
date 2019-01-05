@@ -75,6 +75,7 @@ public class JobSeekerHome extends AppCompatActivity {
     TextView pp1, pp2, pp3, pp4, pp5, pp6, pp7, pp8, pp9, pp10;
     int c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0, c9 = 0, c10 = 0, total_per = 0;
     HttpResponse response = null;
+    LinearLayout view;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
@@ -311,23 +312,15 @@ public class JobSeekerHome extends AppCompatActivity {
             }
         });
 
-        LinearLayout view = (LinearLayout) findViewById(R.id.view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), CV.class);
-                intent.putExtra("id", id);
-                intent.putExtra("page", "0");
-                startActivity(intent);
-            }
-        });
+        view = (LinearLayout) findViewById(R.id.view);
+        view.setClickable(false);
 
         LinearLayout settings = (LinearLayout) findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), ProfileOptions.class);
-                startActivity(intent);
+                Logout alert = new Logout();
+                alert.showDialog(JobSeekerHome.this, "");
             }
         });
 
@@ -898,6 +891,20 @@ public class JobSeekerHome extends AppCompatActivity {
                 per = per / 10;
                 total_percent.setText(new DecimalFormat("##.##").format(per) + "%");
                 total_prog.setProgress(Math.round(Float.parseFloat(per + "")));
+                final String percent = String.valueOf(per);
+                view.setClickable(true);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    /*Intent intent = new Intent(getBaseContext(), CV.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("page", "0");
+                    startActivity(intent);*/
+                        Intent intent = new Intent(getBaseContext(), ProfileOptions.class);
+                        intent.putExtra("percent", percent);
+                        startActivity(intent);
+                    }
+                });
                 //Toast.makeText(JobSeekerHome.this, "" + total_per, Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();

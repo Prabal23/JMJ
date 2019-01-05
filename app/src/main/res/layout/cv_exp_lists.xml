@@ -123,6 +123,7 @@
                     android:layout_marginLeft="0dp"
                     android:gravity="start|center"
                     android:text="*"
+                    android:visibility="gone"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="9dp" />
 
@@ -130,7 +131,7 @@
                     android:id="@+id/resp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="0dp"
                     android:gravity="start|center"
                     android:text="Description"
                     android:textColor="#696969"

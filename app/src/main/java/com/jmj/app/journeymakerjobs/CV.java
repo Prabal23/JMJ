@@ -67,7 +67,7 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
     ArrayList<ProductExtracurricular> arrayList6;
     String id, page, fullname, basa, mail, father, mother, birth, gen, obj, marriage, rel, nid, mob, mob2, fbid, jobs, ref;
     TextView name, mailing, thikana, father_name, mother_name, jonmo, gender, objective, married, religion, natid, phn, phn2, facebook, myjobs, reference;
-    TextView emp, emp1;
+    TextView emp, emp1, sign_empty;
     LinearLayout statuses, pdf_linear, p, extra;
     ScrollView sc;
     ImageView img, signature;
@@ -127,6 +127,8 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
         TextView phonepic = (TextView) findViewById(R.id.phonepic);
         TextView edit = (TextView) findViewById(R.id.edit);
         TextView pdf = (TextView) findViewById(R.id.pdf);
+
+        sign_empty = (TextView) findViewById(R.id.list_empty7);
 
         homepic.setTypeface(fontAwesomeFont);
         emailpic.setTypeface(fontAwesomeFont);
@@ -390,6 +392,11 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
                     sign = arrayListCV.get(i).getSignature();
                     if (!sign.equals("") && !sign.contains("localhost")) {
                         Picasso.with(CV.this).load(sign).into(signature);
+                        signature.setVisibility(View.VISIBLE);
+                        sign_empty.setVisibility(View.GONE);
+                    } else {
+                        signature.setVisibility(View.GONE);
+                        sign_empty.setVisibility(View.VISIBLE);
                     }
                 }
             } catch (JSONException e) {
@@ -715,9 +722,9 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
                 byte[] b2 = address1.getBytes("UTF-8");
                 String add1 = new String(b2, "UTF-8");
                 date.setText(add);
-                if(add1.equals("0000-00-00")){
+                if (add1.equals("0000-00-00")) {
                     date1.setText("Continuing");
-                }else{
+                } else {
                     date1.setText(add1);
                 }
             } catch (UnsupportedEncodingException e) {

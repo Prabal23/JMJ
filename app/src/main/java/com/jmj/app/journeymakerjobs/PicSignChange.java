@@ -214,7 +214,7 @@ public class PicSignChange extends AppCompatActivity {
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
         Matrix matrix = new Matrix();
-// RESIZE THE BIT MAP
+        // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);
         // RECREATE THE NEW BITMAP
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,

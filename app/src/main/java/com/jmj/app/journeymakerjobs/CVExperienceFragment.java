@@ -256,7 +256,6 @@ public class CVExperienceFragment extends Fragment {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String ServerResponse) {
-
                                 Toast.makeText(getContext(), "Success", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getActivity().getBaseContext(), CV.class);
                                 intent.putExtra("id", id);

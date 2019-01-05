@@ -69,6 +69,7 @@ public class CVModification extends AppCompatActivity {
         adapter.addFragment(new CVExtracurricularFragment(), "Extracurricular");
         adapter.addFragment(new CVAchievementFragment(), "Achievement");
         adapter.addFragment(new CVReferenceFragment(), "Reference");
+        adapter.addFragment(new CVPicSignFragment(), "Picture & Signature");
         viewPager.setAdapter(adapter);
     }
 

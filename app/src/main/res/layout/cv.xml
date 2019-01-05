@@ -1043,6 +1043,16 @@
                     android:layout_height="50dp"
                     android:src="@drawable/signature1" />
 
+                <TextView
+                    android:id="@+id/list_empty7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:text="N/A"
+                    android:textColor="#5e5e5e"
+                    android:textSize="8dp"
+                    android:visibility="gone"/>
+
             </LinearLayout>
 
         </LinearLayout>

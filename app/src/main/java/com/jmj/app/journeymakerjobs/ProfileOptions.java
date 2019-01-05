@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileOptions extends AppCompatActivity {
     Typeface fontAwesomeFont;
     TextView edit, del, name, basa, total;
-    String res, res1 = "", id, username, pass, fullname, pic = "0", sign = "";
+    String res, res1 = "", id, username, pass, fullname, pic = "0", sign = "", percent;
     CircleImageView img;
     ProgressBar progressBar, total_prog;
     ArrayList<ProductCV> arrayListCV;
@@ -46,6 +46,7 @@ public class ProfileOptions extends AppCompatActivity {
     ArrayList<ProductNotify> arrayList6;
     ArrayList<ProductExtracurricular> arrayList7;
     int c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0, c9 = 0, c10 = 0, total_per = 0;
+    float p = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +122,11 @@ public class ProfileOptions extends AppCompatActivity {
         img = (CircleImageView) findViewById(R.id.pic);
         total = (TextView) findViewById(R.id.total);
 
+        percent = getIntent().getStringExtra("percent");
+        p = Float.parseFloat(percent);
+        total.setText(new DecimalFormat("##.##").format(p) + "%");
+        total_prog.setProgress(Math.round(Float.parseFloat(p + "")));
+
         arrayListCV = new ArrayList<>();
         runOnUiThread(new Runnable() {
             @Override
@@ -187,35 +193,7 @@ public class ProfileOptions extends AppCompatActivity {
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(Utils.SHARED_PREF_PDF, Context.MODE_PRIVATE);
 
-       /* if (sharedPreferences1.contains(Utils.OK_SHARED_PREF)) {
-            //res1 = (sharedPreferences).getString(Utils.OK_SHARED_PREF, "");
-            res1 = (sharedPreferences1).getString(Utils.OK_SHARED_PREF, "");
-            //Toast.makeText(this, res1, Toast.LENGTH_SHORT).show();
-            de.setClickable(true);
-            de.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!res1.equals("")){
-                        names();
-                    }
-                }
-            });
-        }
-        if (!sharedPreferences1.contains(Utils.OK_SHARED_PREF)) {
-            res1 = "";
-            //Toast.makeText(this, res1, Toast.LENGTH_SHORT).show();
-            //de.setClickable(false);
-            de.setClickable(true);
-            de.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(res1.equals("")){
-                        names();
-                    }
-                }
-            });
-        }*/
-        arrayList = new ArrayList<>();
+        /*arrayList = new ArrayList<>();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -270,7 +248,7 @@ public class ProfileOptions extends AppCompatActivity {
                 //new ReadJSON().execute(Utils.IP + "direct/appasdfasdfasliasdfasded_jasdfasdfob_lasdfasdfistasdfasdf/12342124?user_id=6668");
                 new ReadJSON6().execute(Utils.IP + "direct/extracurasdfricular_detaasdfiasdfls_allasdfas/12342124?user_id=" + id);
             }
-        });
+        });*/
     }
 
     class ReadJSONCV extends AsyncTask<String, Integer, String> {
@@ -333,7 +311,7 @@ public class ProfileOptions extends AppCompatActivity {
                     String mob2 = arrayListCV.get(i).getAlt_mobile();
                     if (mob2.equals("null") || mob2.equals("")) {
                         c1 += 0;
-                    }else{
+                    } else {
                         c1 += 10;
                     }
                     String father = arrayListCV.get(i).getFather_name();
@@ -347,7 +325,7 @@ public class ProfileOptions extends AppCompatActivity {
                     String birth = arrayListCV.get(i).getBirth_date();
                     if (birth.equals("") || birth.equals("0000-00-00")) {
                         c1 += 0;
-                    }else{
+                    } else {
                         c1 += 5;
                     }
                     String gen = arrayListCV.get(i).getGender();
@@ -372,7 +350,7 @@ public class ProfileOptions extends AppCompatActivity {
                         c1 += 2;
                     }
                     pic = arrayListCV.get(i).getPhoto();
-                    if(!pic.equals("") || !pic.contains("localhost")) {
+                    if (!pic.equals("") || !pic.contains("localhost")) {
                         c9 = 100;
                     }
                     String sign = arrayListCV.get(i).getSignature();
@@ -397,11 +375,11 @@ public class ProfileOptions extends AppCompatActivity {
                     if (pic.equals("") || pic.contains("localhost") || pic.equals("http://www.journeymakerjobs.com/images/jobseeker/jobseekerimage/jobseekeroldimage")) {
                         c9 = 0;
                         img.setImageDrawable(getResources().getDrawable(R.drawable.member_icon));
-                    }
-                    else {
+                    } else {
                         c9 = 100;
                         Picasso.with(ProfileOptions.this).load(pic).into(img);
                     }
+                    progressBar.setVisibility(View.GONE);
                     sign = arrayListCV.get(i).getSignature();
                     //Toast.makeText(ProfileOptions.this, sign, Toast.LENGTH_LONG).show();
                 }
