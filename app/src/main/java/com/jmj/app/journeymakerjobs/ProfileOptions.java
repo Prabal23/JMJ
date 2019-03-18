@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileOptions extends AppCompatActivity {
     Typeface fontAwesomeFont;
     TextView edit, del, name, basa, total;
-    String res, res1 = "", id, username, pass, fullname, pic = "0", sign = "", percent;
+    String res, res1 = "", id, username, pass, fullname, pic = "0", sign = "", percent="0";
     CircleImageView img;
     ProgressBar progressBar, total_prog;
     ArrayList<ProductCV> arrayListCV;
@@ -377,7 +377,7 @@ public class ProfileOptions extends AppCompatActivity {
                         img.setImageDrawable(getResources().getDrawable(R.drawable.member_icon));
                     } else {
                         c9 = 100;
-                        Picasso.with(ProfileOptions.this).load(pic).into(img);
+                        Picasso.get().load(pic).into(img);
                     }
                     progressBar.setVisibility(View.GONE);
                     sign = arrayListCV.get(i).getSignature();

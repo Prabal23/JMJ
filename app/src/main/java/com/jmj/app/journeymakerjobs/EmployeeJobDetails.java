@@ -137,7 +137,7 @@ public class EmployeeJobDetails extends AppCompatActivity {
 
         final ImageView pic = (ImageView) findViewById(R.id.pic);
         if (!img.equals("") && !img.contains("localhost")) {
-            Picasso.with(this).load(img).into(pic);
+            Picasso.get().load(img).into(pic);
         }
 
         final String dist = getIntent().getStringExtra("dist");

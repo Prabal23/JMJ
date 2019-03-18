@@ -268,7 +268,7 @@ public class EmployeeList extends AppCompatActivity {
             final CircleImageView image = (CircleImageView) convertView.findViewById(R.id.p1);
             String img = product.getPhoto();
             if (!img.equals("") && !img.contains("localhost")) {
-                Picasso.with(context).load(img).into(image);
+                Picasso.get().load(img).into(image);
             }
 
             try {

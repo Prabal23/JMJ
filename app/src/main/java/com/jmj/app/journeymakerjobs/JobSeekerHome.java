@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
@@ -62,7 +62,7 @@ public class JobSeekerHome extends AppCompatActivity {
     private ProgressDialog pDialog;
     int downloadedSize = 0, totalsize;
     float per = 0;
-    String res, id = "", pass = "", username = "", versionName, versionNameURL, error;
+    String res, id = "", pass = "", username = "", versionName, versionNameURL, error="1";
     TextView title, total, name, total_percent;
     ArrayList<ProductCV> arrayListCV;
     ArrayList<ProductExpertiseTraining> arrayList, arrayList2, arrayList3;
@@ -74,7 +74,7 @@ public class JobSeekerHome extends AppCompatActivity {
     ProgressBar b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, total_prog, progressBar;
     TextView pp1, pp2, pp3, pp4, pp5, pp6, pp7, pp8, pp9, pp10;
     int c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0, c9 = 0, c10 = 0, total_per = 0;
-    HttpResponse response = null;
+    //HttpResponse response=null;
     LinearLayout view;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -88,6 +88,7 @@ public class JobSeekerHome extends AppCompatActivity {
         int versionCode = BuildConfig.VERSION_CODE;
         versionName = BuildConfig.VERSION_NAME;
 
+        //old data fetch er moto kora lagbe
         HttpClient Client = new DefaultHttpClient();
 
         String URL = "http://www.journeymakerjobs.com/direct/sdfapp_isdfnfosd/12345";
@@ -97,7 +98,7 @@ public class JobSeekerHome extends AppCompatActivity {
         HttpGet httpget = new HttpGet(URL);
         //HttpResponse response = null;
         try {
-            response = Client.execute(httpget);
+            HttpResponse response = Client.execute(httpget);
             HttpEntity httpEntity = response.getEntity();
             String res = EntityUtils.toString(httpEntity);
             //Toast.makeText(this, res, Toast.LENGTH_LONG).show();
@@ -128,6 +129,8 @@ public class JobSeekerHome extends AppCompatActivity {
         if (error.equals("0")) {
             ErrorMsg alert = new ErrorMsg();
             alert.showDialog(JobSeekerHome.this, "");
+        }else{
+
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -604,7 +607,7 @@ public class JobSeekerHome extends AppCompatActivity {
                         pro_pic.setImageDrawable(getResources().getDrawable(R.drawable.member_icon));
                     } else {
                         c9 = 100;
-                        Picasso.with(JobSeekerHome.this).load(pic).into(pro_pic);
+                        Picasso.get().load(pic).memoryPolicy(MemoryPolicy.NO_CACHE).into(pro_pic);
                     }
                     String sign = arrayListCV.get(i).getSignature();
                     if (!sign.equals("") && !sign.contains("localhost")) {

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -254,7 +252,7 @@ public class ApplicantList extends AppCompatActivity {
             String img = product.getPhoto();
             //Toast.makeText(ApplicantList.this, img, Toast.LENGTH_LONG).show();
             if (!img.equals("") && !img.contains("localhost")) {
-                Picasso.with(context).load(img).into(image);
+                Picasso.get().load(img).into(image);
             }else{
                 image.setImageResource(R.drawable.member_icon);
             }

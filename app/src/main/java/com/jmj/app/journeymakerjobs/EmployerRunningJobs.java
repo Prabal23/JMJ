@@ -299,7 +299,7 @@ public class EmployerRunningJobs extends AppCompatActivity {
             final ImageView image = (ImageView) convertView.findViewById(R.id.p1);
             String img = product.getImage();
             if (!img.equals("") && !img.contains("localhost")) {
-                Picasso.with(context).load(img).into(image);                //Picasso.with(context).load(img).into(image);
+                Picasso.get().load(img).into(image);                //Picasso.with(context).load(img).into(image);
             }
 
             TextView exp = (TextView) convertView.findViewById(R.id.exp);

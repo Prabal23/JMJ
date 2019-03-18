@@ -395,23 +395,23 @@ public class CVReferenceFragment extends Fragment {
 
         public static void setListViewHeightBasedOnChildren1(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class Splash extends AppCompatActivity {
     @Override
@@ -19,5 +20,9 @@ public class Splash extends AppCompatActivity {
                 finish();
             }
         }, 3000);
+
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView version = (TextView) findViewById(R.id.version);
+        version.setText("v" + versionName);
     }
 }

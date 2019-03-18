@@ -63,7 +63,7 @@ public class PicChange extends AppCompatActivity {
             }
         }
         else {
-            Picasso.with(PicChange.this).load(pic).into(imageView);
+            Picasso.get().load(pic).into(imageView);
             //Glide.with(MyProfile.this).load(picture).into(profile_pic);
             try {
                 URL url = new URL(pic);

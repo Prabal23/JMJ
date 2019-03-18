@@ -66,7 +66,7 @@ public class RunningJobPicChange extends AppCompatActivity {
             //Toast.makeText(this, "Lol", Toast.LENGTH_SHORT).show();
             //Toast.makeText(this,"p1 "+ pic, Toast.LENGTH_SHORT).show();
         } else {
-            Picasso.with(RunningJobPicChange.this).load(pic).into(imageView);
+            Picasso.get().load(pic).into(imageView);
             //Glide.with(MyProfile.this).load(picture).into(profile_pic);
             //Toast.makeText(this, "Lol 1", Toast.LENGTH_SHORT).show();
             //Toast.makeText(this,"p2 "+ pic, Toast.LENGTH_SHORT).show();

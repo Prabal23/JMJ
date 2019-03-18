@@ -186,7 +186,7 @@ public class EmployerProfile extends AppCompatActivity {
                     pic = arrayListCV.get(i).getPhoto();
                     //Toast.makeText(ProfileOptions.this, pic, Toast.LENGTH_LONG).show();
                     if (!pic.equals("") && !pic.contains("localhost")) {
-                        Picasso.with(EmployerProfile.this).load(pic).into(img);
+                        Picasso.get().load(pic).into(img);
                     }
                     n = arrayListCV.get(i).getPerson();
                     com.setText(n);

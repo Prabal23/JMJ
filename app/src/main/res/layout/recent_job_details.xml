@@ -236,7 +236,7 @@
                     android:layout_marginTop="0dp"
                     android:background="@drawable/img_back"
                     android:padding="2dp"
-                    android:src="@drawable/jmj" />
+                    android:src="@drawable/jobs_icon" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

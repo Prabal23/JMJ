@@ -33,12 +33,6 @@ public class EmployerSearch extends AppCompatActivity{
                 finish();
             }
         });
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         LinearLayout r5 = (LinearLayout) findViewById(R.id.r5);
         r5.setOnClickListener(new View.OnClickListener() {

@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,18 +14,24 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +48,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -48,11 +63,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -77,8 +96,11 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
     Bitmap bitmap;
     ProgressDialog progressDialog;
     String res, res1 = "", username, pdf_ok = "", sign, pic;
+    String dirpath;
     private ProgressBar progres;
     int cnt = 0;
+    private File pdfFile;
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -173,7 +195,13 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
         extra = (LinearLayout) findViewById(R.id.extra);
 
         init();
-        fn_permission();
+        try {
+            createPdfWrapper();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
 
         LinearLayout editing = (LinearLayout) findViewById(R.id.e);
         editing.setOnClickListener(new View.OnClickListener() {
@@ -387,11 +415,11 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
                     pic = arrayListCV.get(i).getPhoto();
                     //Toast.makeText(CV.this, pic, Toast.LENGTH_LONG).show();
                     if (!pic.equals("") && !pic.contains("localhost")) {
-                        Picasso.with(CV.this).load(pic).into(img);
+                        Picasso.get().load(pic).into(img);
                     }
                     sign = arrayListCV.get(i).getSignature();
                     if (!sign.equals("") && !sign.contains("localhost")) {
-                        Picasso.with(CV.this).load(sign).into(signature);
+                        Picasso.get().load(sign).into(signature);
                         signature.setVisibility(View.VISIBLE);
                         sign_empty.setVisibility(View.GONE);
                     } else {
@@ -1081,23 +1109,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1106,23 +1134,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren1(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1131,23 +1159,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren2(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1156,23 +1184,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren3(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1181,23 +1209,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren4(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1206,23 +1234,23 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
 
         public static void setListViewHeightBasedOnChildren6(ListView listView) {
             ListAdapter listAdapter = listView.getAdapter();
-            if (listAdapter == null) {
-                // pre-condition
+            if (listAdapter == null)
                 return;
-            }
 
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
             int totalHeight = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            View view = null;
             for (int i = 0; i < listAdapter.getCount(); i++) {
-                View listItem = listAdapter.getView(i, null, listView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                totalHeight += listItem.getMeasuredHeight();
-            }
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
-            listView.requestLayout();
         }
     }
 
@@ -1243,17 +1271,32 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
                 if (boolean_save) {
 
                 } else {
-                    if (boolean_permission) {
-                        progres.setVisibility(View.VISIBLE);
-                        bitmap = loadBitmapFromView(pdf_linear, pdf_linear.getWidth(), pdf_linear.getHeight());
-                        createPdf();
-
+                    progres.setVisibility(View.VISIBLE);
+                    File file = saveBitMap(CV.this, pdf_linear);
+                    if (file != null) {
                         progres.setVisibility(View.GONE);
+                        //Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
+                    } else {
+                        progres.setVisibility(View.GONE);
+                        //Toast.makeText(this, "Cannot saved", Toast.LENGTH_SHORT).show();
+                    }
+                    if (boolean_permission) {
+                        //progres.setVisibility(View.VISIBLE);
+                        //bitmap = loadBitmapFromView(pdf_linear, pdf_linear.getWidth(), pdf_linear.getHeight());
+                        //createPdf();
+                        /*try {
+                            createPdfWrapper();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        }*/
+                        /*progres.setVisibility(View.GONE);
 
                         String targetPdf = "/sdcard/" + fullname + " CV.pdf";
                         Snackbar snackbar = Snackbar
                                 .make(pdf_linear, "Saved to - " + targetPdf, Snackbar.LENGTH_LONG);
-                                /*.setAction("View", new View.OnClickListener() {
+                                .setAction("View", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         if (boolean_save) {
@@ -1262,14 +1305,14 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
                                             startActivity(intent);
                                         }
                                     }
-                                });*/
+                                });
 
                         snackbar.setActionTextColor(Color.RED);
 
                         View sbView = snackbar.getView();
                         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
                         textView.setTextColor(Color.WHITE);
-                        snackbar.show();
+                        snackbar.show();*/
 
                     } else {
 
@@ -1281,7 +1324,217 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private File saveBitMap(Context context, View drawView) {
+        File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "JMJ_CVImages");
+        if (!pictureFileDir.exists()) {
+            boolean isDirectoryCreated = pictureFileDir.mkdirs();
+            if (!isDirectoryCreated)
+                Log.i("TAG", "Can't create directory to save the image");
+            return null;
+        }
+        String filename = pictureFileDir.getPath() + File.separator + "images.jpg";
+        File pictureFile = new File(filename);
+        Bitmap bitmap = getBitmapFromView(drawView);
+        try {
+            pictureFile.createNewFile();
+            FileOutputStream oStream = new FileOutputStream(pictureFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, oStream);
+            oStream.flush();
+            oStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i("TAG", "There was an issue saving the image.");
+        }
+        scanGallery(context, pictureFile.getAbsolutePath());
+        convertPDF();
+        return pictureFile;
+    }
+
+    private Bitmap getBitmapFromView(View view) {
+        //Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        //Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        //Get the view's background
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null) {
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        } else {
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        }
+        // draw the view on the canvas
+        view.draw(canvas);
+        //return the bitmap
+        return returnedBitmap;
+    }
+
+
+    // used for scanning gallery
+    private void scanGallery(Context cntx, String path) {
+        try {
+            MediaScannerConnection.scanFile(cntx, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                public void onScanCompleted(String path, Uri uri) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("TAG", "There was an issue scanning gallery.");
+        }
+    }
+
+    public void convertPDF() {
+        String targetPdf = fullname + " CV.pdf";
+        //Toast.makeText(this, targetPdf, Toast.LENGTH_SHORT).show();
+        //Document doc = new Document();
+
+        String directoryPath = android.os.Environment.getExternalStorageDirectory().toString();
+        //File exportDir = new File(Environment.getExternalStorageDirectory(), targetPdf);
+        try {
+            /*PdfWriter.getInstance(doc, new FileOutputStream(directoryPath + "/" + targetPdf));
+            doc.open();*/
+
+            String filename = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/JMJ_CVImages/images.jpg";
+            //Toast.makeText(this, filename, Toast.LENGTH_SHORT).show();
+            Image image = Image.getInstance(filename);
+            /*float scaler = ((doc.getPageSize().getWidth() - doc.leftMargin() - doc.rightMargin() - 0) / image.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
+            image.scalePercent(scaler);
+            image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);*/
+            //image.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+            /*float documentWidth = doc.getPageSize().getWidth() - doc.leftMargin() - doc.rightMargin();
+            float documentHeight = doc.getPageSize().getHeight() - doc.topMargin() - doc.bottomMargin();
+            //image.scaleAbsolute(documentWidth, documentHeight);
+            image.scaleToFit(documentWidth, documentHeight);
+            doc.add(image);
+            doc.close();*/
+            float width = image.getScaledWidth();
+            float height = image.getScaledHeight();
+            Rectangle page = new Rectangle(width, height);
+
+            Document document = new Document(page);
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(directoryPath + "/" + targetPdf));
+            document.open();
+            PdfContentByte canvas = writer.getDirectContentUnder();
+            canvas.addImage(image, width, 0, 0, height, 0, 0);
+            document.newPage();
+            document.close();
+
+            //Toast.makeText(this, "PDF Saved", Toast.LENGTH_SHORT).show();
+            String targetPdf1 = "storage/" + fullname + " CV.pdf";
+            final Snackbar snackbar = Snackbar.make(pdf_linear, "Saved to - " + targetPdf1, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("OK", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackbar.dismiss();
+                }
+            });
+
+            snackbar.setActionTextColor(Color.YELLOW);
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
+            snackbar.show();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createPdfWrapper() throws FileNotFoundException,DocumentException{
+
+        int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
+                    showMessageOKCancel("You need to allow access to Storage",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                                REQUEST_CODE_ASK_PERMISSIONS);
+                                    }
+                                }
+                            });
+                    return;
+                }
+
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+            }
+            return;
+        }else {
+            /*File file = saveBitMap(CV.this, pdf_linear);
+            if (file != null) {
+                progres.setVisibility(View.GONE);
+                //Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
+            } else {
+                progres.setVisibility(View.GONE);
+                Toast.makeText(this, "Cannot saved", Toast.LENGTH_SHORT).show();
+            }*/
+            init();
+        }
+    }
+
+   @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    try {
+                        createPdfWrapper();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Permission Denied
+                    Toast.makeText(this, "WRITE_EXTERNAL Permission Denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    /* private void createPdf() throws FileNotFoundException, DocumentException {
+
+        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        if (!docsFolder.exists()) {
+            docsFolder.mkdir();
+        }
+
+        pdfFile = new File(docsFolder.getAbsolutePath(),"HelloWorld.pdf");
+        OutputStream output = new FileOutputStream(pdfFile);
+        Document document = new Document();
+        PdfWriter.getInstance(document, output);
+        document.open();
+        document.add(new Paragraph(mContentEditText.getText().toString()));
+
+        document.close();
+        //previewPdf();
+    }*/
+
+/*
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void createPdf() {
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -1337,6 +1590,7 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
         document.close();
         //Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
+*/
 
     public static Bitmap loadBitmapFromView(View v, int width, int height) {
         Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -1369,6 +1623,7 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1385,4 +1640,5 @@ public class CV extends AppCompatActivity implements View.OnClickListener {
             }
         }
     }
+*/
 }

@@ -169,6 +169,7 @@ public class RecentJobs extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -585,7 +586,7 @@ public class RecentJobs extends AppCompatActivity {
             String photo_2 = product.getPhoto_2();
             if (!img.equals("")) {
                 //Toast.makeText(RecentJobs.this, "l1", Toast.LENGTH_SHORT).show();
-                Picasso.with(context)
+                Picasso.get()
                         .load(img)
                         .into(holder.image);
             }
@@ -745,7 +746,6 @@ public class RecentJobs extends AppCompatActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
                 convertView = layoutInflater.inflate(R.layout.jobtype_list_item, null, true);
-
             }
             ProductJobType product = getItem(position);
 
@@ -793,8 +793,7 @@ public class RecentJobs extends AppCompatActivity {
             int width_tmp = o.outWidth, height_tmp = o.outHeight;
             int scale = 1;
             while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE) {
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
                     break;
                 }
                 width_tmp /= 2;

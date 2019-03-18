@@ -360,7 +360,7 @@ public class RecentJobsApply extends AppCompatActivity {
             String img = product.getImage();
             if (!img.equals("")) {
                 //Toast.makeText(RecentJobs.this, "l1", Toast.LENGTH_SHORT).show();
-                Picasso.with(context).load(img).into(image);
+                Picasso.get().load(img).into(image);
             }
             if (img.endsWith("/") || img.equals("")) {
                 image.setImageDrawable(getResources().getDrawable(R.drawable.jobs_icon));

@@ -3,7 +3,11 @@ package com.jmj.app.journeymakerjobs;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -23,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,6 +50,7 @@ public class RecentJobRemarks extends AppCompatActivity {
     TextView text_press, post, status;
     private HttpClient Client;
     HttpGet httpget;
+    Bitmap bit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,9 +103,35 @@ public class RecentJobRemarks extends AppCompatActivity {
         ji = getIntent().getStringExtra("ji");
         pic = getIntent().getStringExtra("pic");
         post.setText(name);
-        ImageView img = (ImageView) findViewById(R.id.pic);
+        Uri uris = null;
+        final ImageView pics = (ImageView) findViewById(R.id.pic);
         if (!pic.equals("") && !pic.contains("localhost")) {
-            Picasso.with(this).load(pic).into(img);
+            //Picasso.with(this).load(img).into(pic);
+            Picasso.get()
+                    .load(pic)
+                    .into(new Target() {
+
+                        @Override
+                        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                            // Set it in the ImageView
+                            pics.setImageBitmap(bitmap);
+                            bit = bitmap;
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        }
+                    });
+        }else {
+            uris = Uri.parse("android.resource://com.jmj.app.journeymakerjobs/drawable/jobs_icon");
+            if (uris != null) {
+                bit = decodeUri(uris, 70);
+            }
         }
 
         iSalary = (TextInputLayout) findViewById(R.id.input_salary);
@@ -224,6 +256,42 @@ public class RecentJobRemarks extends AppCompatActivity {
             }
         });
     }
+
+    protected Bitmap decodeUri(Uri selectedImage, int REQUIRED_SIZE) {
+
+        try {
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
+
+            // The new size we want to scale to
+            // final int REQUIRED_SIZE =  size;
+
+            // Find the correct scale value. It should be the power of 2.
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale = 1;
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE
+                        || height_tmp / 2 < REQUIRED_SIZE) {
+                    break;
+                }
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public void insert() {
         ResponseHandler<String> responseHandler = new BasicResponseHandler();

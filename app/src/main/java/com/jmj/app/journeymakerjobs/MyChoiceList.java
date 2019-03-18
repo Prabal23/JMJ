@@ -350,7 +350,7 @@ public class MyChoiceList extends AppCompatActivity {
             ImageView image = (ImageView) convertView.findViewById(R.id.p1);
             String img = product.getImage();
             if (!img.equals("") && !img.contains("localhost")) {
-                Picasso.with(context).load(img).into(image);
+                Picasso.get().load(img).into(image);
             } else {
                 Uri uris = Uri.parse("android.resource://com.example.itlab.journeymakerjobs/drawable/jmj");
                 if (uris != null) {

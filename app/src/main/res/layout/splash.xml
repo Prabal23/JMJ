@@ -9,24 +9,42 @@
     android:orientation="vertical"
     tools:context=".Splash">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/plz_back"
-        android:padding="5dp"
-        android:src="@drawable/app_logo" />
-
-    <com.github.silvestrpredko.dotprogressbar.DotProgressBar
-        android:id="@+id/dot_progress_bar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:layout_marginTop="15dp"
-        custom:amount="6"
-        custom:animationDirection="right"
-        custom:duration="@android:integer/config_mediumAnimTime"
-        custom:endColor="#ffffff"
-        custom:startColor="#bcbcbc" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/plz_back"
+            android:padding="5dp"
+            android:src="@drawable/app_logo" />
+
+        <com.github.silvestrpredko.dotprogressbar.DotProgressBar
+            android:id="@+id/dot_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_below="@+id/logo"
+            android:layout_marginTop="15dp"
+            custom:amount="6"
+            custom:animationDirection="right"
+            custom:duration="@android:integer/config_mediumAnimTime"
+            custom:endColor="#ffffff"
+            custom:startColor="#bcbcbc" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:text="Version"
+            android:textColor="#ffffff"
+            android:textSize="14dp" />
+    </RelativeLayout>
+
 </LinearLayout>

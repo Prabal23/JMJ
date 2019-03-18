@@ -74,7 +74,7 @@ public class PicSignChange extends AppCompatActivity {
                 originalImage = getResizedBitmap(bitmap, 581, 472);
             }
         } else {
-            Picasso.with(PicSignChange.this).load(pic).into(imageView);
+            Picasso.get().load(pic).into(imageView);
             //Glide.with(MyProfile.this).load(picture).into(profile_pic);
             try {
                 URL url = new URL(pic);
@@ -111,7 +111,7 @@ public class PicSignChange extends AppCompatActivity {
                 resizedBitmap = getResizedBitmap(bitmap1, 150, 200);
             }
         } else {
-            Picasso.with(PicSignChange.this).load(sign).into(signature);
+            Picasso.get().load(sign).into(signature);
             //Glide.with(MyProfile.this).load(picture).into(profile_pic);
             try {
                 URL url = new URL(sign);

@@ -1,7 +1,5 @@
 package com.jmj.app.journeymakerjobs;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,45 +9,22 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,14 +33,10 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
-import pl.droidsonroids.gif.GifImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -230,7 +201,7 @@ public class CVPicSignFragment extends Fragment {
                     }*/
 
                     pic = arrayListCV.get(i).getPhoto();
-                    //Toast.makeText(ProfileOptions.this, pic, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), pic, Toast.LENGTH_LONG).show();
                     if (pic.equals("") || pic.contains("localhost") || pic.equals("http://www.journeymakerjobs.com/images/jobseeker/jobseekerimage/jobseekeroldimage")) {
                         counts = 0;
                         Uri uri = Uri.parse("android.resource://com.jmj.app.journeymakerjobs/drawable/profile_icon");
@@ -249,9 +220,10 @@ public class CVPicSignFragment extends Fragment {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        Picasso.with(getActivity()).load(pic).into(imageView);
+                        Picasso.get().load(pic).into(imageView);
                     }
                     sign = arrayListCV.get(i).getSignature();
+                    //Toast.makeText(getContext(), sign, Toast.LENGTH_LONG).show();
                     if (sign.equals("") || sign.contains("localhost") || sign.equals("http://www.journeymakerjobs.com/images/jobseeker/jobseekerimage/jobseekeroldimage")) {
                         counts1 = 0;
                         Uri uri1 = Uri.parse("android.resource://com.jmj.app.journeymakerjobs/drawable/signature1");
@@ -271,7 +243,7 @@ public class CVPicSignFragment extends Fragment {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        Picasso.with(getActivity()).load(pic).into(signature);
+                        Picasso.get().load(sign).into(signature);
                     }
 
                     comps.setText(counts + "% Completed");
@@ -330,7 +302,7 @@ public class CVPicSignFragment extends Fragment {
 
                         bitmap1 = decodeUri1(filePath1, 100);
                         resizedBitmap = getResizedBitmap(bitmap1, 150, 200);
-                        signature.setImageBitmap(resizedBitmap);
+                        signature.setImageBitmap(bitmap1);
                     }
                     //super.onActivityResult(requestCode, resultCode, data);
                 }
@@ -349,8 +321,7 @@ public class CVPicSignFragment extends Fragment {
         // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);
         // RECREATE THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
-                matrix, false);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
 
@@ -366,8 +337,7 @@ public class CVPicSignFragment extends Fragment {
             int width_tmp = o.outWidth, height_tmp = o.outHeight;
             int scale = 1;
             while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE) {
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
                     break;
                 }
                 width_tmp /= 2;
@@ -396,8 +366,7 @@ public class CVPicSignFragment extends Fragment {
             int width_tmp = o.outWidth, height_tmp = o.outHeight;
             int scale = 1;
             while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE) {
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
                     break;
                 }
                 width_tmp /= 2;
@@ -452,7 +421,7 @@ public class CVPicSignFragment extends Fragment {
                     res.setText("Uploaded Successfully");
                     res.setTextColor(Color.parseColor("#006400"));
                     Toast.makeText(getActivity(), "Picture Uploaded Successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getActivity().getBaseContext(), ProfileOptions.class);
+                    Intent intent = new Intent(getActivity().getBaseContext(), JobSeekerHome.class);
                     startActivity(intent);
                 }
                 /*if (s.contains("সফলভাবে আপলোড করা হয়েছে") || s.contains("সফলভাবে আপডেট করা হয়েছে")) {
@@ -460,11 +429,11 @@ public class CVPicSignFragment extends Fragment {
                     res.setText(s + "");
                     res.setTextColor(Color.parseColor("#006400"));
                 }*/
-                if (s.contains("success") || s.contains("Success")) {
+                /*if (s.contains("success") || s.contains("Success")) {
                     res.setVisibility(View.VISIBLE);
                     res.setText(s + "");
                     res.setTextColor(Color.parseColor("#e83d3d"));
-                }
+                }*/
             }
 
             @Override
@@ -478,8 +447,6 @@ public class CVPicSignFragment extends Fragment {
 
                 data.put("user_file_3", uploadImage);
                 data.put("user_id", userid);
-                //data.put("image", uploadImage);
-                //data.put("userid", userid);
                 String result = rh.sendPostRequest(UPLOAD_URL_PIC, data);
 
                 return result;
@@ -512,7 +479,7 @@ public class CVPicSignFragment extends Fragment {
                     res.setText("Uploaded Successfully");
                     res.setTextColor(Color.parseColor("#006400"));
                     Toast.makeText(getActivity(), "Signature Uploaded Successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getActivity().getBaseContext(), ProfileOptions.class);
+                    Intent intent = new Intent(getActivity().getBaseContext(), JobSeekerHome.class);
                     startActivity(intent);
                 }
                 /*if (s.contains("সফলভাবে আপলোড করা হয়েছে") || s.contains("সফলভাবে আপডেট করা হয়েছে")) {
@@ -520,11 +487,11 @@ public class CVPicSignFragment extends Fragment {
                     res.setText(s + "");
                     res.setTextColor(Color.parseColor("#006400"));
                 }*/
-                if (s.contains("success") || s.contains("Success")) {
+                /*if (s.contains("success") || s.contains("Success")) {
                     res.setVisibility(View.VISIBLE);
                     res.setText(s + "");
                     res.setTextColor(Color.parseColor("#e83d3d"));
-                }
+                }*/
             }
 
             @Override
@@ -538,8 +505,6 @@ public class CVPicSignFragment extends Fragment {
 
                 data.put("user_file_3", uploadImage);
                 data.put("user_id", userid);
-                //data.put("image", uploadImage);
-                //data.put("userid", userid);
                 String result = rh.sendPostRequest(UPLOAD_URL_SIGN, data);
 
                 return result;

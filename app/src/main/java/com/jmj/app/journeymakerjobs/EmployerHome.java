@@ -157,7 +157,7 @@ public class EmployerHome extends AppCompatActivity {
                     //Getting editor
                     SharedPreferences.Editor editor1 = preferences1.edit();
 
-                    //Puting the value false for loggedin
+                    //Putting the value false for loggedin
                     editor1.putBoolean(Utils.PDF_SHARED_PREF, false);
 
                     //Putting blank value to email

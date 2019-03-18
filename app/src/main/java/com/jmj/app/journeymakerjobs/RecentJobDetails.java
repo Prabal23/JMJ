@@ -151,7 +151,7 @@ public class RecentJobDetails extends AppCompatActivity {
         final ImageView pic = (ImageView) findViewById(R.id.pic);
         if (!img.equals("") && !img.contains("localhost")) {
             //Picasso.with(this).load(img).into(pic);
-            Picasso.with(this)
+            Picasso.get()
                     .load(img)
                     .into(new Target() {
 
@@ -163,17 +163,19 @@ public class RecentJobDetails extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
                         }
 
                         @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
                         }
+
                     });
         }else {
-            uris = Uri.parse("android.resource://com.example.itlab.journeymakerjobs/drawable/jmj");
+            uris = Uri.parse("android.resource://com.jmj.app.journeymakerjobs/drawable/jobs_icon");
             if (uris != null) {
-                bit = decodeUri(uris, 70);
+                bit = decodeUri(uris, 100);
             }
         }
 
