@@ -156,7 +156,7 @@ public class CVExperienceFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 int d = monthOfYear + 1;
                                 int day = dayOfMonth;
-                                str.setText("Job Start : " + year + "-" + day + "-" + day);
+                                str.setText("Job Start : " + year + "-" + d + "-" + day);
                                 str1 = year + "-" + d + "-" + day;
                             }
                         }, mYear, mMonth, mDay);
@@ -181,7 +181,7 @@ public class CVExperienceFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 int d = monthOfYear + 1;
                                 int day = dayOfMonth;
-                                end.setText("Job End : " + year + "-" + day + "-" + day);
+                                end.setText("Job End : " + year + "-" + d + "-" + day);
                                 end1 = year + "-" + d + "-" + day;
                             }
                         }, mYear, mMonth, mDay);
